@@ -1,0 +1,52 @@
+DROP DATABASE IF EXISTS memo_db;
+CREATE DATABASE memo_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE memo_db;
+
+CREATE USER IF NOT EXISTS 'memo'@'%' IDENTIFIED BY 'memopass';
+GRANT ALL PRIVILEGES ON memo_db.* TO 'memo'@'%';
+FLUSH PRIVILEGES;
+
+CREATE TABLE books (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(255) DEFAULT '',
+    cover VARCHAR(500) DEFAULT '',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_title_author (title, author)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE excerpts (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    book_id INT UNSIGNED NOT NULL,
+    content TEXT,
+    insights TEXT,
+    links JSON DEFAULT (JSON_ARRAY()),
+    images JSON DEFAULT (JSON_ARRAY()),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE,
+    FULLTEXT INDEX ft_excerpt (content, insights) WITH PARSER ngram
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE tags (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    color VARCHAR(7) DEFAULT '#409EFF',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE excerpt_tags (
+    excerpt_id BIGINT UNSIGNED NOT NULL,
+    tag_id INT UNSIGNED NOT NULL,
+    PRIMARY KEY (excerpt_id, tag_id),
+    FOREIGN KEY (excerpt_id) REFERENCES excerpts(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO tags (name, color) VALUES
+('哲学', '#409EFF'),
+('心理学', '#67C23A'),
+('文学', '#E6A23C'),
+('金句', '#F56C6C'),
+('方法论', '#909399'),
+('待整理', '#9254DE');
