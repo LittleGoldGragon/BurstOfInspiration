@@ -25,12 +25,12 @@ async def init_db():
             count = result.scalar()
             if count == 0:
                 default_tags = [
-                    ("哲学", "#409EFF"),
-                    ("心理学", "#67C23A"),
-                    ("文学", "#E6A23C"),
-                    ("金句", "#F56C6C"),
-                    ("方法论", "#909399"),
-                    ("待整理", "#9254DE"),
+                    ("哲学", "#57534e"),
+                    ("心理学", "#78716c"),
+                    ("文学", "#a67c52"),
+                    ("金句", "#44403c"),
+                    ("方法论", "#64748b"),
+                    ("待整理", "#a8a29e"),
                 ]
                 for name, color in default_tags:
                     session.add(Tag(name=name, color=color))

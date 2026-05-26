@@ -1,6 +1,6 @@
 from sqlalchemy import (
     Column, Integer, String, Text, DateTime, ForeignKey,
-    BigInteger, JSON, Index
+    JSON
 )
 from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy.sql import func
@@ -35,7 +35,7 @@ class Book(Base):
 class Excerpt(Base):
     __tablename__ = "excerpts"
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     book_id = Column(Integer, ForeignKey("books.id", ondelete="CASCADE"), nullable=False)
     content = Column(Text)
     insights = Column(Text)
@@ -84,5 +84,5 @@ class Tag(Base):
 class ExcerptTag(Base):
     __tablename__ = "excerpt_tags"
 
-    excerpt_id = Column(BigInteger, ForeignKey("excerpts.id", ondelete="CASCADE"), primary_key=True)
+    excerpt_id = Column(Integer, ForeignKey("excerpts.id", ondelete="CASCADE"), primary_key=True)
     tag_id = Column(Integer, ForeignKey("tags.id", ondelete="CASCADE"), primary_key=True)

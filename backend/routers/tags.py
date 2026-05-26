@@ -4,7 +4,7 @@ from sqlalchemy import select
 
 from database import get_db
 from models import Tag
-from schemas import TagCreate, TagResponse
+from schemas import TagCreate, TagUpdate, TagResponse
 
 router = APIRouter()
 
@@ -23,6 +23,20 @@ async def create_tag(data: TagCreate, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=400, detail="标签名已存在")
     tag = Tag(**data.model_dump())
     db.add(tag)
+    await db.commit()
+    await db.refresh(tag)
+    return tag.to_dict()
+
+
+@router.put("/tags/{tag_id}", response_model=TagResponse)
+async def update_tag(tag_id: int, data: TagUpdate, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(Tag).where(Tag.id == tag_id))
+    tag = result.scalar_one_or_none()
+    if not tag:
+        raise HTTPException(status_code=404, detail="标签不存在")
+    updates = data.model_dump(exclude_unset=True)
+    for key, val in updates.items():
+        setattr(tag, key, val)
     await db.commit()
     await db.refresh(tag)
     return tag.to_dict()

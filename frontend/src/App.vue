@@ -2,7 +2,6 @@
   <div class="app-wrapper">
     <header class="app-header">
       <h1>爆发的灵感</h1>
-      <p class="subtitle">记录书中智慧，标注个人思考</p>
     </header>
     <main class="app-main">
       <el-tabs v-model="activeTab" class="main-tabs">
@@ -43,8 +42,10 @@ watch(activeTab, (tab) => {
 }
 
 body {
-  background-color: #f5f0eb;
-  font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background-color: #f8f7f4;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Source Han Serif CN', serif;
+  color: #1c1c1c;
+  -webkit-font-smoothing: antialiased;
 }
 
 .app-wrapper {
@@ -53,44 +54,58 @@ body {
 
 .app-header {
   text-align: center;
-  padding: 24px 0 8px;
-  background: linear-gradient(135deg, #5c4a32 0%, #7a6348 100%);
-  color: #fff;
+  padding: 40px 0 28px;
+  background: #fff;
+  border-bottom: 1px solid #edeae5;
 }
 
 .app-header h1 {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
-  letter-spacing: 4px;
+  letter-spacing: 6px;
+  color: #1c1c1c;
 }
 
 .app-header .subtitle {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.7);
-  margin-top: 4px;
+  color: #a8a29e;
+  margin-top: 6px;
+  letter-spacing: 2px;
 }
 
 .app-main {
-  max-width: 1200px;
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 16px 20px 40px;
+  padding: 28px 24px 60px;
 }
 
 .main-tabs > .el-tabs__header {
-  margin-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+.main-tabs .el-tabs__nav-wrap::after {
+  background-color: transparent;
 }
 
 .main-tabs .el-tabs__item {
   font-size: 15px;
   font-weight: 500;
-  color: #5c4a32;
+  color: #a8a29e;
+  padding: 0 24px;
+  transition: color 0.2s;
+}
+
+.main-tabs .el-tabs__item:hover {
+  color: #57534e;
 }
 
 .main-tabs .el-tabs__active-bar {
-  background-color: #5c4a32;
+  background-color: #1c1c1c;
+  height: 2px;
 }
 
 .main-tabs .el-tabs__item.is-active {
-  color: #5c4a32;
+  color: #1c1c1c;
+  font-weight: 600;
 }
 </style>

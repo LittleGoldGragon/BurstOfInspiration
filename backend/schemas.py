@@ -27,6 +27,11 @@ class TagCreate(BaseModel):
     color: Optional[str] = "#409EFF"
 
 
+class TagUpdate(BaseModel):
+    name: Optional[str] = Field(None, min_length=1, max_length=50)
+    color: Optional[str] = None
+
+
 class TagResponse(BaseModel):
     id: int
     name: str
