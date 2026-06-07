@@ -10,26 +10,44 @@
 <body>
   <div id="app"></div>
 
-<!-- 下面是新增的本地存储代码，不用修改任何内容 -->
 <script>
-// 等待页面组件完全渲染完成
-window.addEventListener('load', function () {
-  setTimeout(() => {
-    // 匹配页面里所有文本框/文本域
-    const textElems = document.querySelectorAll('textarea, input[type="text"]');
-    
-    textElems.forEach((el, idx) => {
-      const key = 'save_content_' + idx;
-      // 读取并恢复内容
-      const oldVal = localStorage.getItem(key);
-      if (oldVal) el.value = oldVal;
+// 安全写入 localStorage（防 Safari 隐私报错）
+function safeSet(key, val) {
+  try {
+    localStorage.setItem(key, val);
+  } catch (e) {
+    console.warn('localStorage 写入失败（可能隐私模式）', e);
+  }
+}
+function safeGet(key) {
+  try {
+    return localStorage.getItem(key) || '';
+  } catch (e) {
+    console.warn('localStorage 读取失败', e);
+    return '';
+  }
+}
 
-      // 输入时自动保存
-      el.addEventListener('input', function () {
-        localStorage.setItem(key, this.value);
-      });
+// 绑定保存逻辑
+function bindSave() {
+  const textElems = document.querySelectorAll('textarea, input[type="text"]');
+  textElems.forEach((el, idx) => {
+    const key = 'save_content_' + idx;
+    // 恢复
+    el.value = safeGet(key);
+    // 实时保存
+    el.addEventListener('input', function () {
+      safeSet(key, this.value);
     });
-  }, 800);
+  });
+}
+
+// 兼容 Safari：pageshow 比 load 更可靠
+window.addEventListener('pageshow', function () {
+  // 等 Vue 渲染完
+  requestAnimationFrame(() => {
+    bindSave();
+  });
 });
 </script>
 
