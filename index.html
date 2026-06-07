@@ -9,5 +9,29 @@
 </head>
 <body>
   <div id="app"></div>
+
+<!-- 下面是新增的本地存储代码，不用修改任何内容 -->
+<script>
+// 等待页面组件完全渲染完成
+window.addEventListener('load', function () {
+  setTimeout(() => {
+    // 匹配页面里所有文本框/文本域
+    const textElems = document.querySelectorAll('textarea, input[type="text"]');
+    
+    textElems.forEach((el, idx) => {
+      const key = 'save_content_' + idx;
+      // 读取并恢复内容
+      const oldVal = localStorage.getItem(key);
+      if (oldVal) el.value = oldVal;
+
+      // 输入时自动保存
+      el.addEventListener('input', function () {
+        localStorage.setItem(key, this.value);
+      });
+    });
+  }, 800);
+});
+</script>
+
 </body>
 </html>
